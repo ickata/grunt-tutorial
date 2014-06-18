@@ -9,7 +9,9 @@ module.exports = function ( grunt ) {
    grunt.initConfig({
       jshint   : {
          all      : [
-            'Gruntfile.js'
+            'Gruntfile.js',
+            'project/Scripts/**/*.js',       // "/**/" means recursively
+            '!project/Scripts/lib/**/*.js'   // "!" means exclude
          ]
       }
    });
