@@ -5,6 +5,7 @@ module.exports = function ( grunt ) {
       'grunt-contrib-uglify',
       'grunt-contrib-compress',
       'grunt-ssh',
+      'grunt-contrib-clean',
       'grunt-contrib-jasmine',
       'grunt-contrib-connect',
       'grunt-contrib-watch',
@@ -77,6 +78,9 @@ module.exports = function ( grunt ) {
                port     : 23
             }
          }
+      },
+      clean    : {
+         all      : [ 'build', '*.tar.gz' ]
       },
       jasmine  : {
          shell    : {
@@ -166,6 +170,7 @@ module.exports = function ( grunt ) {
       'jasmine'
    ]);
    grunt.registerTask('build', 'Create a build, compress files', [
+      'clean',
       'sass:prod',
       'copy',
       'uglify',
