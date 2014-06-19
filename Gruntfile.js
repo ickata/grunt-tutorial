@@ -9,6 +9,9 @@ module.exports = function ( grunt ) {
    }];
    // load NPM tasks
    [
+      'grunt-contrib-connect',
+      'grunt-contrib-watch',
+      'grunt-open',
       'grunt-contrib-sass',
       'grunt-contrib-jshint'
    ].forEach( function ( name ) {
