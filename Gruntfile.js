@@ -1,12 +1,4 @@
 module.exports = function ( grunt ) {
-   // globals
-   var sass_files = [{
-      expand   : true,
-      cwd      : 'project/sass/',      // current working directory
-      dest     : 'project/css/',
-      src      : '**/*.{sass, scss}',
-      ext      : '.css'
-   }];
    // load NPM tasks
    [
       'grunt-contrib-copy',
@@ -30,7 +22,7 @@ module.exports = function ( grunt ) {
                expand   : true,
                cwd      : 'project',
                dest     : 'build',
-               src      : ['*.html', 'Scripts/**/*.js', 'css/**/*.css']
+               src      : ['*.html']
             }]
          }
       },
@@ -38,8 +30,8 @@ module.exports = function ( grunt ) {
          my_target   : {
             files : [{
                expand   : true,
-               cwd      : './',
-               src      : 'project/Scripts/**/*.js',
+               cwd      : 'project/Scripts',
+               src      : '**/*.js',
                dest     : 'build/Scripts'
             }]
          }
@@ -133,14 +125,26 @@ module.exports = function ( grunt ) {
                style          : 'expanded',
                lineComments   : true
             },
-            files    : sass_files
+            files    : [{
+               expand   : true,
+               cwd      : 'project/sass/',      // current working directory
+               dest     : 'project/css/',
+               src      : '**/*.{sass, scss}',
+               ext      : '.css'
+            }]
          },
          // sub-task
          prod     : {
             options  : {
                style          : 'compressed'
             },
-            files    : sass_files
+            files    : [{
+               expand   : true,
+               cwd      : 'project/sass/',      // current working directory
+               dest     : 'build/css/',
+               src      : '**/*.{sass, scss}',
+               ext      : '.css'
+            }]
          }
       },
       jshint   : {
@@ -165,8 +169,7 @@ module.exports = function ( grunt ) {
       'sass:prod',
       'copy',
       'uglify',
-      'compress',
-      'sass:dev'
+      'compress'
    ]);
    grunt.registerTask('deploy', 'Deploy latest build on production', [
       'build',
