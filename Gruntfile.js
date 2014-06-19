@@ -9,6 +9,7 @@ module.exports = function ( grunt ) {
    }];
    // load NPM tasks
    [
+      'grunt-contrib-jasmine',
       'grunt-contrib-connect',
       'grunt-contrib-watch',
       'grunt-open',
@@ -19,6 +20,15 @@ module.exports = function ( grunt ) {
    }, grunt );
    // init configuration
    grunt.initConfig({
+      jasmine  : {
+         shell    : {
+            options  : {
+               specs    : ['tests/**/*.js'],
+               vendor   : ['project/Scripts/lib/**/*.js']
+            },
+            src      : ['project/Scripts/**/*.js', '!project/Scripts/lib/**/*.js']
+         }
+      },
       connect  : {
          server   : {
             options  : {
@@ -77,8 +87,12 @@ module.exports = function ( grunt ) {
    });
    // custom tasks
    grunt.registerTask('livereload', 'Starts a server & opens the browser', [
-         'connect',
-         'open',
-         'watch'
-      ]);
+      'connect',
+      'open',
+      'watch'
+   ]);
+   grunt.registerTask('test', 'Code linting & unit testing', [
+      'jshint',
+      'jasmine'
+   ]);
 };
