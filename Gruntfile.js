@@ -9,6 +9,10 @@ module.exports = function ( grunt ) {
    }];
    // load NPM tasks
    [
+      'grunt-contrib-copy',
+      'grunt-contrib-uglify',
+      'grunt-contrib-compress',
+      'grunt-ssh',
       'grunt-contrib-jasmine',
       'grunt-contrib-connect',
       'grunt-contrib-watch',
@@ -20,6 +24,68 @@ module.exports = function ( grunt ) {
    }, grunt );
    // init configuration
    grunt.initConfig({
+      copy     : {
+         release  : {
+            files    : [{
+               expand   : true,
+               cwd      : 'project',
+               dest     : 'build',
+               src      : ['*.html', 'Scripts/**/*.js', 'css/**/*.css']
+            }]
+         }
+      },
+      uglify   : {
+         my_target   : {
+            files : [{
+               expand   : true,
+               cwd      : './',
+               src      : 'project/Scripts/**/*.js',
+               dest     : 'build/Scripts'
+            }]
+         }
+      },
+      compress : {
+         release  : {
+            options  : {
+               archive  : 'project.tar.gz'
+            },
+            files    : [{
+               expand   : true,
+               cwd      : 'build',
+               src      : ['**/*']
+            }]
+         }
+      },
+      sshconfig: {
+         prod  : grunt.file.readJSON('sshconfig.json')
+      },
+      sftp     : {
+         deploy   : {
+            files    : {
+               './'  : ['project.tar.gz']
+            },
+            options  : {
+               path           : '/home/ickata/public_html/grunt-tutorial/',
+               srcBaseDir     : 'project/',
+               config         : 'prod',
+               port           : 23,
+               agent          : process.env.SSH_AUTH_SOCK
+            }
+         }
+      },
+      sshexec  : {
+         untar    : {
+            command  : [
+               'cd /home/ickata/public_html/grunt-tutorial/',
+               'tar -zxvf project.tar.gz',
+               'rm project.tar.gz'
+            ].join(' && '),
+            options  : {
+               config   : 'prod',
+               port     : 23
+            }
+         }
+      },
       jasmine  : {
          shell    : {
             options  : {
@@ -94,5 +160,17 @@ module.exports = function ( grunt ) {
    grunt.registerTask('test', 'Code linting & unit testing', [
       'jshint',
       'jasmine'
+   ]);
+   grunt.registerTask('build', 'Create a build, compress files', [
+      'sass:prod',
+      'copy',
+      'uglify',
+      'compress',
+      'sass:dev'
+   ]);
+   grunt.registerTask('deploy', 'Deploy latest build on production', [
+      'build',
+      'sftp',
+      'sshexec'
    ]);
 };
