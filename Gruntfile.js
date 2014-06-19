@@ -19,6 +19,34 @@ module.exports = function ( grunt ) {
    }, grunt );
    // init configuration
    grunt.initConfig({
+      connect  : {
+         server   : {
+            options  : {
+               port        : 9000,
+               middleware  : function ( connect ) {
+                  var path = require('path');
+                  return [
+                     connect.static( path.resolve('project') )
+                  ];
+               }
+            }
+         }
+      },
+      open     : {
+         server   : {
+            path     : 'http://localhost:9000'
+         }
+      },
+      watch    : {
+         sass     : {
+            files    : ['project/sass/*.{sass,scss}'],
+            tasks    : ['sass:dev']
+         },
+         app      : {
+            files    : ['project/**/*.*'],
+            tasks    : ['open:server']
+         }
+      },
       sass     : {
          options  : {
             cacheLocation  : '.tmp/.sass-cache'
@@ -47,4 +75,10 @@ module.exports = function ( grunt ) {
          ]
       }
    });
+   // custom tasks
+   grunt.registerTask('livereload', 'Starts a server & opens the browser', [
+         'connect',
+         'open',
+         'watch'
+      ]);
 };

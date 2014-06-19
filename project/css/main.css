@@ -1,1 +1,24 @@
-body{margin:0;padding:0;font:12px Helvetica,Arial}.menu{padding:5px 10px;background:#ff0}.menu li{list-style:none}.menu .btn-primary{background:blue}.menu .btn-secondary{background:grey}
+/* line 4, project/sass/main.sass */
+body {
+  margin: 0;
+  padding: 0;
+  font: 12px Helvetica, Arial;
+}
+
+/* line 9, project/sass/main.sass */
+.menu {
+  padding: 5px 10px;
+  background: yellow;
+}
+/* line 13, project/sass/main.sass */
+.menu li {
+  list-style: none;
+}
+/* line 16, project/sass/main.sass */
+.menu .btn-primary {
+  background: blue;
+}
+/* line 19, project/sass/main.sass */
+.menu .btn-secondary {
+  background: grey;
+}
