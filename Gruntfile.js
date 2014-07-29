@@ -58,7 +58,7 @@ module.exports = function ( grunt ) {
                './'  : ['project.tar.gz']
             },
             options  : {
-               path           : '/home/ickata/public_html/grunt-tutorial/',
+               path           : '/home/ickata/public_html/',
                srcBaseDir     : 'project/',
                config         : 'prod',
                port           : 23,
@@ -69,9 +69,11 @@ module.exports = function ( grunt ) {
       sshexec  : {
          untar    : {
             command  : [
+               'rm -rf /home/ickata/public_html/grunt-tutorial/',
+               'mkdir /home/ickata/public_html/grunt-tutorial/',
                'cd /home/ickata/public_html/grunt-tutorial/',
-               'tar -zxvf project.tar.gz',
-               'rm project.tar.gz'
+               'tar -zxvf ../project.tar.gz',
+               'rm ../project.tar.gz'
             ].join(' && '),
             options  : {
                config   : 'prod',
