@@ -1,0 +1,8 @@
+node_modules
+.gitignore
+.tmp
+tmp
+sshconfig.json
+*.log
+id_rsa
+build

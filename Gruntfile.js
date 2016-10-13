@@ -3,9 +3,7 @@ module.exports = function ( grunt ) {
    [
       'grunt-contrib-copy',
       'grunt-contrib-uglify',
-      'grunt-contrib-compress',
-      'grunt-ssh',
-      'grunt-contrib-clean',
+      'grunt-rsync',
       'grunt-contrib-jasmine',
       'grunt-contrib-connect',
       'grunt-contrib-watch',
@@ -37,52 +35,21 @@ module.exports = function ( grunt ) {
             }]
          }
       },
-      compress : {
-         release  : {
-            options  : {
-               archive  : 'project.tar.gz'
-            },
-            files    : [{
-               expand   : true,
-               cwd      : 'build',
-               src      : ['**/*']
-            }]
-         }
-      },
-      sshconfig: {
-         prod  : grunt.file.readJSON('sshconfig.json')
-      },
-      sftp     : {
-         deploy   : {
-            files    : {
-               './'  : ['project.tar.gz']
-            },
-            options  : {
-               path           : '/home/ickata/public_html/',
-               srcBaseDir     : 'project/',
-               config         : 'prod',
-               port           : 23,
-               agent          : process.env.SSH_AUTH_SOCK
+      rsync    : {
+         options  : {
+            args        : [
+               '--verbose',
+               /*"-e 'ssh -p 2222'"*/  // uncomment this line to use a different port than the default 22
+            ],
+            recursive   : true
+         },
+         prod     : {
+            options     : {
+               src         : 'build/',
+               dest        : '~/public_html/grunt-tutorial',
+               host        : 'user@livehost.com'
             }
          }
-      },
-      sshexec  : {
-         untar    : {
-            command  : [
-               'rm -rf /home/ickata/public_html/grunt-tutorial/',
-               'mkdir /home/ickata/public_html/grunt-tutorial/',
-               'cd /home/ickata/public_html/grunt-tutorial/',
-               'tar -zxvf ../project.tar.gz',
-               'rm ../project.tar.gz'
-            ].join(' && '),
-            options  : {
-               config   : 'prod',
-               port     : 23
-            }
-         }
-      },
-      clean    : {
-         all      : [ 'build', '*.tar.gz' ]
       },
       jasmine  : {
          shell    : {
@@ -171,16 +138,13 @@ module.exports = function ( grunt ) {
       'jshint',
       'jasmine'
    ]);
-   grunt.registerTask('build', 'Create a build, compress files', [
-      'clean',
+   grunt.registerTask('build', 'Create a build, minimize files', [
       'sass:prod',
       'copy',
-      'uglify',
-      'compress'
+      'uglify'
    ]);
    grunt.registerTask('deploy', 'Deploy latest build on production', [
       'build',
-      'sftp',
-      'sshexec'
+      'rsync'
    ]);
 };
